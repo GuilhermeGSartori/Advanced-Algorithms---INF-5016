@@ -12,6 +12,11 @@ struct Edge {
 	Edge(const int dest_node, const int distance) : dest_node(dest_node), distance(distance) {}
 };
 
+struct Operations {
+	int inserts = 0;
+	int updates = 0;
+	int deletes = 0;
+};
 
 
 class Graph {
@@ -40,5 +45,5 @@ private:
 
 public:
 	Dijkstra();
-	int run(Graph&, int, int);
+	int run(Graph&, int, int, int, Operations&);
 };

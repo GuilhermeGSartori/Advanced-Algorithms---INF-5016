@@ -41,14 +41,19 @@ int main(int argc, char** argv) {
 
 	int init = atoi(argv[1]), dest = atoi(argv[2]);
 	int cost;
+	int k = 2; // kHeap value
 	unsigned n, m;
+	Operations dijkstraOps;
 	Graph problemGraph;
 	Dijkstra solver;
 	
 	read_dimacs(std::cin, n, m, problemGraph);
-	cost = solver.run(problemGraph, init-1, dest-1);
+	cost = solver.run(problemGraph, init-1, dest-1, k, dijkstraOps);
 
-	std::cout << cost << "\n";
+	if(cost == INF)
+		std::cout << "inf\n";
+	else
+		std::cout << cost << "\n";
 	
 	return 0;
 }
