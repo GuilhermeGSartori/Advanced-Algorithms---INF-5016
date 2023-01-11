@@ -1,4 +1,5 @@
-#include <vectors>
+#include <vector>
+#include <utility>
 
 /*Start of problem related structures:
   - Change internal content to adapt the graph to a specific problem.
@@ -26,13 +27,12 @@ private:
     // Graph used to read the input file and residual graph (data manipulation) will be the same
     // Graph size = n(Nodes) + m(Edges) -> entender melhor isso.. Default pair, vetor, referencia, vetor vazio, alocar
     int numberOfNodes_;
-    std::vector<std:::pair<Node, std::vector<Edge>> graph_;
-    
+    std::vector<std::pair<Node, std::vector<Edge>>> graph_;
 
 public:
     // Constructor and allocation
     Graph() : numberOfNodes_(0) {}
-    inline void allocateVectors() {graph_.resize(numberOfNodes_, std::Pair<Node, std::vector<Edge>());}
+    inline void allocateVectors() {graph_.resize(numberOfNodes_, std::pair<Node, std::vector<Edge>>());}
 
     // Setters and Getters
     inline void setNumberOfNodes(int n) {numberOfNodes_ = n;}

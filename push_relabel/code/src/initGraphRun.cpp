@@ -8,33 +8,27 @@
 
 void help() {}
 
-bool validateInput(int argc, char argv**, std::istream& in) { // file pointer? or full file? open multiples?
-    if(argc == 1) { // argv not required, input will be passed as cin with ' < '
-	char starter_c = std::cin.peek();
-        if(starter_c != 'c' and starter_c != 'p')
-	    return false;
-	else
-	    return true;
-    }
-    return false;
-}
-
 #ifdef OPERATIONAL
-int main(int argc, char argv**) {
+int main(int argc, char** argv) {
 
     unsigned n, m;
     int output = 0;
-    if(!validateInput(argc, argv, std::cin)) {
+
+    /* adapt expected argc for the problem */
+    if(argc != 1) {
         help();
+	std::cout << "bad input\n";
         return -1;
     }
 
     /* specific to problem modifications required*/
-    /* - Input validation, operations, new variables, class name, graph reading function, solver run, output format*/
+    /* - operations, new variables, class name, graph reading function, solver run, output format*/
     Operations max_flow_ops;
     unsigned s, t;
     PushRelabel solver;
+    std::cout << "graph will be read\n";
     read_graph(std::cin, n, m, s, t, solver);
+    std::cout << "graph WAS read\n";
     // output = solver.runMaxFlow(); -> to do
     //check max flow and output -> nao termina se impossivel? ver isso, estudar mais algoritmo
     /*end of required modifications*/

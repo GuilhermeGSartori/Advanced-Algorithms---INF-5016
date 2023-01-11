@@ -1,6 +1,6 @@
 #include "graph.h"
 
-struct Operations {}
+struct Operations {};
 
 
 class PushRelabel : public Graph {
@@ -20,9 +20,9 @@ private:
 public:
     
     // Setters and Getters
-    void setS(int s);
+    void setS(unsigned s);
     int getS();
-    void setT(int t);
+    void setT(unsigned t);
     int getT();
 
     // Main Max Flow S-T problem functions

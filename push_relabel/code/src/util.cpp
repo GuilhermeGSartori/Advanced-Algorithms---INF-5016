@@ -1,3 +1,4 @@
+#include <sstream>
 #include <iostream>
 #include "../include/push_relabel.h"
 
@@ -11,16 +12,17 @@ void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigne
     linestr.str(line);
     linestr >> dummy >> dummy >> n >> m;
     graph_in_solver.setNumberOfNodes(n);
-    graph_in_solver.allocateVector();
+    graph_in_solver.allocateVectors();
     unsigned i=0;
 
     bool found_s = false;
     bool found_t = false;
+    std::cout << "now we will read!\n";
     while(!found_s || !found_t) {
 	getline(in,line);
         if(line.substr(0, 2) == "n ") {
 	    std::stringstream s_or_t;
-	    char n, stc
+	    char n, stc;
 	    if(line.find("s") != std::string::npos) {
 	        s_or_t >> n >> s >> stc;
 		graph_in_solver.setS(s);
@@ -28,7 +30,7 @@ void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigne
 	    }
 	    if(line.find("t") != std::string::npos) {
 		s_or_t >> n >> t >> stc;
-		graph_in_solver.set(t);
+		graph_in_solver.setT(t);
 		found_t = true;
 	    }
 	}

@@ -3,7 +3,7 @@
 bool Graph::addEdge(int u, int v, int w) {
 
     if(u < numberOfNodes_ && v < numberOfNodes_) {
-        Graph::graph_[u].second().push_back(Edge(v, w));
+        Graph::graph_[u].second.push_back(Edge(v, w));
         return true;
     }
     return false;
@@ -12,7 +12,7 @@ bool Graph::addEdge(int u, int v, int w) {
 bool Graph::setGraphNode(Node updated, int node_number) {
 
     if(node_number < numberOfNodes_) { 
-        Graph::graph_[node_number].first() = updated;
+        Graph::graph_[node_number].first = updated;
         return true;
     }
     return false;
@@ -21,7 +21,7 @@ bool Graph::setGraphNode(Node updated, int node_number) {
 Node Graph::getGraphNode(int node_number) {
 
     std::pair<Node, std::vector<Edge>> node_pair = Graph::graph_[node_number];
-    Node selected_node = node_pair.first();
+    Node selected_node = node_pair.first;
     
     return selected_node;
 }
