@@ -1,4 +1,4 @@
-void readFlowGraph(std::istream& in, unsigned& n, unsigned& m, Graph& problemGraph);
+#include "graph.h"
 
 struct Operations {}
 
@@ -22,7 +22,7 @@ public:
     // Setters and Getters
     void setS(int s);
     int getS();
-    void getT(int t);
+    void setT(int t);
     int getT();
 
     // Main Max Flow S-T problem functions
