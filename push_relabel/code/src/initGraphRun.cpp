@@ -1,9 +1,10 @@
 #include <iostream>
-#include "../include/util.h"
-#include "../include/test.h"
+//#include "../include/test.h"
+#include "../include/test_map.h"
+/*#include "../include/util.h"*/
 
 // Parece que tem como colocar isso no make
-#define OPERATIONAL
+#define TEST
 
 void help() {}
 
@@ -40,6 +41,34 @@ int main(int argc, char** argv) {
 // pode ser generico, so pega testes de map e ja era, igual para todos projetos
 #ifdef TEST
 int main() {
+    int test_number;
+    PushRelabel solver;
+
+    std::cout << "------------------------------\n";
+    std::cout << "Choose a test case to perform:\n\n";
+    std::cout << "* 1 -> Graph Data Structure\n";
+    std::cout << "------------------------------\n";
+ 
+    std::cin >> test_number; // loop for input?
+    
+    //bool results = testHub(test_number, solver);
+    
+    auto test_case = test_map.find(test_number);
+
+    if(test_case != test_map.end()) {
+        bool results = test_case->second(solver);
+	if(results) {
+	    std::cout << "Test passed!\n";
+	}
+	else
+	    std::cout << "Test failed... :(\n";
+    }
+    else {
+        std::cout << "Test case does not exist\n";
+    }
+
+
+    
     return 0;
 }
 #endif //TEST

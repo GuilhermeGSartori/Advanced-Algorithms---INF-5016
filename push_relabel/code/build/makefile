@@ -5,7 +5,7 @@ INC_DIR = ../include
 
 
 max_flow: $(SRC_DIR)/graph.o $(SRC_DIR)/push_relabel.o $(SRC_DIR)/test.o $(SRC_DIR)/util.o $(SRC_DIR)/initGraphRun.o
-	  $(CC) -o max_flow util.o graph.o initGraphRun.o push_relabel.o test.o
+	  $(CC) -o max_flow util.o test.o graph.o initGraphRun.o push_relabel.o
 
 $(SRC_DIR)/graph.o: $(SRC_DIR)/graph.cpp $(INC_DIR)/graph.h
 		    $(CC) -c $(SRC_DIR)/graph.cpp
