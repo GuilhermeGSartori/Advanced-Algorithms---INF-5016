@@ -13,8 +13,8 @@ struct Edge {
 };
 
 struct Node {
-    int h;
-    int excessFlow_;
+    int h_ = 0;
+    int excessFlow_ = 0;
 };
 /*End of problem related structures*/
 

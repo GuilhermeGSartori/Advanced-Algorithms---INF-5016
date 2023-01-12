@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iostream>
-#include "../include/push_relabel.h"
+#include "../include/util.h"
+
 
 void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigned& t, PushRelabel& graph_in_solver) {
 	
