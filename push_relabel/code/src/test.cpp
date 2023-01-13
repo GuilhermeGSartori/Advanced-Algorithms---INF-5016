@@ -131,10 +131,10 @@ bool testGraphData(PushRelabel& graph_in_solver) { // this funcion will read an 
 	std::cout << "num of added edges: " << num_of_adds << " == " << m <<  "\n";
 	assert(num_of_adds == m);
 
-	std::cout << "biggest: " << biggest << " == " << tested_n-1 << "\n";
+	std::cout << "biggest: " << biggest << "(" << biggest+1 << ")" << " == " << tested_n-1 << "\n";
 	assert(biggest == tested_n-1);
 
-	std::cout << "smallest: " << smallest << " == 0\n";
+	std::cout << "smallest: " << smallest << "(" << smallest+1 << ")" << " == 0\n";
 	assert(smallest == 0);
 
 	std::cout << "Official S: " << graph_in_solver.getS() << " == " << tested_s << "\n";
