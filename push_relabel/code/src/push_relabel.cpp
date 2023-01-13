@@ -3,9 +3,9 @@
 
 
 void PushRelabel::setS(unsigned s) {
-    std::cout << "colocamos s\n";
+    PushRelabel::s_ = s;
 }
 
 void PushRelabel::setT(unsigned t) {
-    std::cout << "colocamos t\n";
+    PushRelabel::t_ = t;
 }

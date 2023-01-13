@@ -15,22 +15,24 @@ void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigne
     graph_in_solver.setNumberOfNodes(n);
     graph_in_solver.allocateVectors();
     unsigned i=0;
+    int added_edges = 0;
 
     bool found_s = false;
     bool found_t = false;
-    std::cout << "now we will read!\n";
+
     while(!found_s || !found_t) {
 	getline(in,line);
         if(line.substr(0, 2) == "n ") {
-	    std::stringstream s_or_t;
 	    char n, stc;
 	    if(line.find("s") != std::string::npos) {
-	        s_or_t >> n >> s >> stc;
+		std::stringstream s_line(line);
+		s_line >> n >> s >> stc;
 		graph_in_solver.setS(s);
 	        found_s = true;
 	    }
 	    if(line.find("t") != std::string::npos) {
-		s_or_t >> n >> t >> stc;
+		std::stringstream t_line(line);
+		t_line >> n >> t >> stc;
 		graph_in_solver.setT(t);
 		found_t = true;
 	    }
@@ -39,6 +41,7 @@ void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigne
     while(i<m) {
 	getline(in,line);
 	if(line.substr(0,2) == "a ") {
+	    added_edges += 1;
 	    std::stringstream arc(line);
 	    unsigned u,v,w;
             char ac;
@@ -47,4 +50,6 @@ void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigne
 	    i++;
 	}
     }
+    if(added_edges != m)
+        std::cout << "WRONG NUMBER OF ADD EDGES!\n";
 }

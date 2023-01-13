@@ -7,7 +7,7 @@ class PushRelabel : public Graph {
 
 private:
     // Start and Target
-    int s, t;
+    int s_, t_;
     
     // Pre-Flow Initialization
     void preFlow(int s);
@@ -20,10 +20,10 @@ private:
 public:
     
     // Setters and Getters
-    void setS(unsigned s);
-    int getS();
-    void setT(unsigned t);
-    int getT();
+    void setS(unsigned);
+    inline int getS() {return s_;}
+    void setT(unsigned);
+    inline int getT() {return t_;}
 
     // Main Max Flow S-T problem functions
     void updateFlow(int u, int v, int new_f);

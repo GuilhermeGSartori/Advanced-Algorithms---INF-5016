@@ -39,6 +39,7 @@ public:
     inline int getNumberOfNodes() {return numberOfNodes_;}
     
     std::pair<Node, std::vector<Edge>> getAdjacencyList(int node);
+    inline std::vector<std::pair<Node, std::vector<Edge>>> getGraph() {return graph_;}
 
     bool setGraphNode(Node updated, int node_number);
     Node getGraphNode(int node_number);
