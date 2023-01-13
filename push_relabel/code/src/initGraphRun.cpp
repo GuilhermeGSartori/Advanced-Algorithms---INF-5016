@@ -44,10 +44,11 @@ int main() {
     int test_number;
     PushRelabel solver;
 
-    std::cout << "------------------------------\n";
+    std::cout << "-------------------------------\n";
     std::cout << "Choose a test case to perform:\n\n";
     std::cout << "* 1 -> Graph Data Structure\n";
-    std::cout << "------------------------------\n";
+    std::cout << "* 2 -> Edges Data Verification\n";
+    std::cout << "-------------------------------\n";
  
     std::cin >> test_number; // loop for input?
     

@@ -5,11 +5,78 @@
 #include <cassert>
 #include "../include/test.h"
 
+bool testEdgesData(PushRelabel& graph_in_solver) { // WARNING! This funcion will use adjacency matrix, have this in mind while changing the graph
+    std::ifstream tested_graph("graphs/edges.txt");
+    std::ifstream input_graph("graphs/edges.txt");
 
-bool testGraphData(PushRelabel& graph_in_solver) { // this funcion will an example graph file
+    unsigned m, n, s, t, tested_n, tested_m;
+    unsigned u, v, w;
+    int count = 0;
+    std::string line = "", dummy;
+    std::stringstream linestr;
 
-    std::ifstream tested_graph("graphs/ex.txt");
-    std::ifstream input_graph("graphs/ex.txt");
+    read_graph(input_graph, n, m, s, t, graph_in_solver);
+    
+    if(tested_graph.is_open()) {
+        while(count < 1) {
+           getline(tested_graph, line);
+           if(line.substr(0,5) == "p max") {
+               linestr.str(line);
+               linestr >> dummy >> dummy >> tested_n >> tested_m;
+               count++;
+           }
+        }
+        int adj_matrix[n][n];
+	for(int i=0;i<n;i++) {
+	    for(int j=0;j<n;j++)
+                adj_matrix[i][j] = -1;
+	}
+        
+	while(getline(tested_graph, line)) {
+            if(line.substr(0,2) == "a ") {
+                std::stringstream arc(line);
+                arc >> dummy >> u >> v >> w;
+                adj_matrix[u-1][v-1] = w;
+            }
+        }
+	
+	std::cout << "\nSubtract -1 from U and V for the node numbers inside the Data Structures\n\n";
+	for(int i=0;i<n;i++) {
+	    int num_out_edges = 0;
+	    std::pair<Node, std::vector<Edge>> adj_list;
+	    adj_list = graph_in_solver.getAdjacencyList(i);
+	    for(int j=0;j<n;j++) {
+	        if(adj_matrix[i][j] != -1) {
+		    num_out_edges++;
+		    bool found_v_or_end = false;
+		    int k = 0;
+		    while(!found_v_or_end) {
+		        if(adj_list.second[k].destNode_ == j) {
+			    std::cout << i+1 << " ----> " << j+1 << "\n";
+			    std::cout << "Capacity: " << adj_list.second[k].capacity_ << " == " << adj_matrix[i][j] << "\n";
+			    assert(adj_matrix[i][j] == adj_list.second[k].capacity_);
+			    found_v_or_end = true;
+			}
+			if(k == adj_list.second.size()) {
+			    found_v_or_end = true;
+			}
+			k++;
+		    }
+		}
+	    }
+	    std::cout << "Num of edges: " << adj_list.second.size() << " == " << num_out_edges << "\n";
+	    assert(adj_list.second.size() == num_out_edges);
+	}
+    }
+    else
+        return false;
+    return true;
+}
+
+bool testGraphData(PushRelabel& graph_in_solver) { // this funcion will read an example graph file (not input)
+
+    std::ifstream tested_graph("graphs/graphData.txt");
+    std::ifstream input_graph("graphs/graphData.txt");
     unsigned m, n, s, t, total_edges = 0;
     unsigned tested_n, tested_m;
     unsigned tested_s, tested_t;
@@ -95,6 +162,8 @@ bool testGraphData(PushRelabel& graph_in_solver) { // this funcion will an examp
 	std::cout << "Sum of all nodes out edges: " << total_edges << " == " << tested_m << "\n";
 	assert(total_edges == tested_m);
     }
+    else
+        return false;
 
     return true;
 }
