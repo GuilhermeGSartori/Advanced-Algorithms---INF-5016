@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 #endif //OPERATIONAL
 
 
-// pode ser generico, so pega testes de map e ja era, igual para todos projetos
+
 #ifdef TEST
 int main() {
     int test_number;
@@ -48,11 +48,10 @@ int main() {
     std::cout << "Choose a test case to perform:\n\n";
     std::cout << "* 1 -> Graph Data Structure\n";
     std::cout << "* 2 -> Edges Data Verification\n";
+    std::cout << "* 3 -> Update Nodes and Edges\n";
     std::cout << "-------------------------------\n";
  
     std::cin >> test_number; // loop for input?
-    
-    //bool results = testHub(test_number, solver);
     
     auto test_case = test_map.find(test_number);
 

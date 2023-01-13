@@ -5,6 +5,54 @@
 #include <cassert>
 #include "../include/test.h"
 
+bool testNodeUpdates(PushRelabel& graph_in_solver) {
+    std::ifstream input_graph("graphs/updates.txt");
+    unsigned m, n, s, t;
+    int node, new_height, new_excess;
+    bool keep_updating = true;
+
+    read_graph(input_graph, n, m, s, t, graph_in_solver);
+    while(keep_updating) {
+        std::cout << "\n\n\nInform the node to be changed (start in 1). Input out of range to stop, 0 < i < n+1.\n";
+	std::cin >> node;
+	if(node > 0 and node < n+1) {
+	    std::cout << "Input the new values of height and excess flow (input negative to keep the same):\n";
+	    std::cin >> new_height;
+	    std::cin >> new_excess;
+	    Node new_node;
+	    Node old_node = graph_in_solver.getGraphNode(node-1);
+	    
+	    if(new_height >= 0)
+	        new_node.h_ = new_height;
+	    else {
+	        new_node.h_ = old_node.h_;
+	        new_height = old_node.h_;
+	    }
+
+	    if(new_excess >= 0)
+		new_node.excessFlow_ = new_excess;
+	    else {
+                new_node.excessFlow_ = old_node.excessFlow_;
+		new_excess = old_node.excessFlow_;
+	    }
+
+	    graph_in_solver.setGraphNode(new_node, node-1);
+	    Node updated = graph_in_solver.getGraphNode(node-1);
+
+            std::cout << "Updated height: " << updated.h_ << " == " << new_height << "\n";
+	    assert(updated.h_ == new_height);
+
+	    std::cout << "Updated excess: " << updated.excessFlow_ << " == " << new_excess << "\n";
+	    assert(updated.excessFlow_ == new_excess);
+	}
+	else
+	    keep_updating = false;
+    }
+
+    return true;
+    // faz o mesmo com edge (pergunta u e depois v), u out of range sai, u->v q nao existe soh diz -> outra funcao?
+}
+
 bool testEdgesData(PushRelabel& graph_in_solver) { // WARNING! This funcion will use adjacency matrix, have this in mind while changing the graph
     std::ifstream tested_graph("graphs/edges.txt");
     std::ifstream input_graph("graphs/edges.txt");
