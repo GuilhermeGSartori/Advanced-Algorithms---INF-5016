@@ -5,7 +5,7 @@ struct Operations {};
 
 class PushRelabel : public Graph {
 
-private:
+private: 
     // Start and Target
     int s_, t_;
     
@@ -14,7 +14,7 @@ private:
 
     // Basic and core Algorithm operations
     void relabel(int u);
-    bool push(int u, int v); 
+    bool push(int u, int v, int idx_v); 
 
 
 public:
@@ -26,10 +26,10 @@ public:
     inline int getT() {return t_;}
      
     // Push and Relabel requirements
-    bool isActive(int);
+    bool uIsActive(Node);
+    bool vIsRightBelow(Node, Node);
 
-    // Main Max Flow S-T problem functions
-    void updateFlow(int u, int v, int new_f);
-    void updateReverseEdgeFlow(int i, int flow);
+    // Main Max Flow S-T problem function
     void getMaxFlow(int s, int t);
+    void buildAlreadyBelow(int u);
 };

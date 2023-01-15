@@ -20,17 +20,17 @@ bool Graph::setGraphNode(Node updated, int node_number) {
 
 Node Graph::getGraphNode(int node_number) {
 
-    std::pair<Node, std::vector<Edge>> node_pair = Graph::graph_[node_number];
+    std::pair<Node, std::vector<Edge>> node_pair = Graph::getAdjacencyList(node_number);
     Node selected_node = node_pair.first;
     
     return selected_node;
 }
 
 bool Graph::setGraphEdge(int u, int v, Edge updated, int uv_idx) {
-    std::pair<Node, std::vector<Edge>> adj_list;
-    adj_list = Graph::getAdjacencyList(u);
+    //std::pair<Node, std::vector<Edge>> adj_list;
+    //adj_list = Graph::getAdjacencyList(u);
     if(uv_idx != -1) {
-        adj_list[uv_idx] = updated;
+	Graph::graph_[u].second[uv_idx] = updated;
 	return true;
     }
     return false;
@@ -40,7 +40,18 @@ Edge Graph::getGraphEdge(int u, int v, int uv_idx) {
     std::pair<Node, std::vector<Edge>> adj_list;
     adj_list = Graph::getAdjacencyList(u);
     if(uv_idx != -1) {
-        return adj_list[uv_idx];
+        return adj_list.second[uv_idx];
+    }
+}
+
+void Graph::removeGraphEdge(int u, int v, int uv_idx) {
+    //std::pair<Node, std::vector<Edge>> adj_list;
+    //adj_list = Graph::getAdjacencyList(u);
+    if(uv_idx != -1) {
+        Edge tmp = graph_[u].second[graph_[u].second.size()-1];
+	graph_[u].second[graph_[u].second.size()-1] = graph_[u].second[uv_idx];
+	graph_[u].second[uv_idx] = tmp;
+	graph_[u].second.pop_back();
     }
 }
 
@@ -48,4 +59,8 @@ std::pair<Node, std::vector<Edge>> Graph::getAdjacencyList(int node) {
     return Graph::graph_[node];
 }
 
-
+/*std::vector<Edge> &Graph::getRefToAdjList(int node) {
+    std::pair<Node, std::vector<Edge>> adj_list;
+    adj_list = getAdjacencyList(node);
+    return adj_list.second;
+}*/

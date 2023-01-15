@@ -37,6 +37,9 @@ bool testNodeUpdates(PushRelabel& graph_in_solver) {
 		new_excess = old_node.excessFlow_;
 	    }
 
+	    // testa se vector = vector, muda e tals...
+	    // tem que ver se o setNode que recebe node = node ja eh o suficiente para dados do vector
+
 	    graph_in_solver.setGraphNode(new_node, node-1);
 	    Node updated = graph_in_solver.getGraphNode(node-1);
 

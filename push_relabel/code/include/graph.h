@@ -41,12 +41,14 @@ public:
     
     std::pair<Node, std::vector<Edge>> getAdjacencyList(int node);
     inline std::vector<std::pair<Node, std::vector<Edge>>> getGraph() {return graph_;}
+    /*std::vector<Edge> &getRefToAdjList(int node);*/
 
     bool setGraphNode(Node updated, int node_number);
     Node getGraphNode(int node_number);
 
-    bool setGraphEdge(int u, int v, Edge updated);
-    Edge getGraphEdge(int u, int v);
+    bool setGraphEdge(int u, int v, Edge updated, int uv_idx);
+    Edge getGraphEdge(int u, int v, int uv_idx);
+    void removeGraphEdge(int u, int v, int uv_idx);
 
     // U --capacity W--> V
     bool addEdge(int u, int v, int w); //testa se nodo que vai inserir existe e tals, essas coisas
