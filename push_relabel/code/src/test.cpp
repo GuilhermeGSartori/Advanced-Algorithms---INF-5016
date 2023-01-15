@@ -5,6 +5,7 @@
 #include <cassert>
 #include "../include/test.h"
 
+// CHECK WHAT NEEDS TO BE UPDATED (priorityList vector (node strcut new attribute))
 bool testNodeUpdates(PushRelabel& graph_in_solver) {
     std::ifstream input_graph("graphs/updates.txt");
     unsigned m, n, s, t;

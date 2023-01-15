@@ -14,7 +14,7 @@ private:
 
     // Basic and core Algorithm operations
     void relabel(int u);
-    bool push(int u); 
+    bool push(int u, int v); 
 
 
 public:
@@ -24,6 +24,9 @@ public:
     inline int getS() {return s_;}
     void setT(unsigned);
     inline int getT() {return t_;}
+     
+    // Push and Relabel requirements
+    bool isActive(int);
 
     // Main Max Flow S-T problem functions
     void updateFlow(int u, int v, int new_f);

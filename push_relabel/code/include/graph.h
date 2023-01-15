@@ -15,6 +15,7 @@ struct Edge {
 struct Node {
     int h_ = 0;
     int excessFlow_ = 0;
+    std::vector<std::pair<int,int>> priority_;
 };
 /*End of problem related structures*/
 
@@ -60,19 +61,27 @@ public:
 * ---------------
 * Vector
 * [0(u)] -> Pair:
-*                Node(-, -)
+*                Node(-, -, Vector -> null)
 *                Vector
 *                  [0] -> Edge(1(v), -, -)
 *                  [1] -> Edge(2(v), -, -)
 * [1(u)] -> Pair:
-*                Node(-, -)
+*                Node(-, -, Vector -> null)
 *                Vector
 *                  null
 * [2(u)] -> Pair:
-*                Node(-, -)
+*                Node(-, -, Vector -> null)
 *                Vector
 *                 [0] -> Edge(1(v), -, -)
 *
+*
+* n + 4m -> to do: adapt with the variables
+* Since the main vector is used to represent the n nodes,
+*     each node will make a pair with a vector that represents his out edges
+*     but during the run of the push relabel he may have 2 out edges to each neighbor (2m).
+*     Each node also have a vector of the neighbors that are contenders for the push (right below),
+*     since the limit is every neighbot the node has, it is 2m too.
+* 
 * End of Graph Example */
 
 

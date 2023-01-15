@@ -2,7 +2,7 @@
 
 bool Graph::addEdge(int u, int v, int w) {
 
-    if(u < numberOfNodes_ && v < numberOfNodes_) {
+    if(u < numberOfNodes_ and v < numberOfNodes_) {
         Graph::graph_[u].second.push_back(Edge(v, w));
         return true;
     }
@@ -26,12 +26,22 @@ Node Graph::getGraphNode(int node_number) {
     return selected_node;
 }
 
-bool Graph::setGraphEdge(int u, int v, Edge updated) {
+bool Graph::setGraphEdge(int u, int v, Edge updated, int uv_idx) {
+    std::pair<Node, std::vector<Edge>> adj_list;
+    adj_list = Graph::getAdjacencyList(u);
+    if(uv_idx != -1) {
+        adj_list[uv_idx] = updated;
+	return true;
+    }
     return false;
 }
 
-Edge Graph::getGraphEdge(int u, int v) {
-
+Edge Graph::getGraphEdge(int u, int v, int uv_idx) {
+    std::pair<Node, std::vector<Edge>> adj_list;
+    adj_list = Graph::getAdjacencyList(u);
+    if(uv_idx != -1) {
+        return adj_list[uv_idx];
+    }
 }
 
 std::pair<Node, std::vector<Edge>> Graph::getAdjacencyList(int node) {
