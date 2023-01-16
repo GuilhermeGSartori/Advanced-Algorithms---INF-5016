@@ -9,7 +9,7 @@ struct Edge {
     int currentFlow_;
     int capacity_;
 
-    Edge(const int dest, const int c) : destNode_(dest), currentFlow_(0), capacity_(c) {}
+    Edge(const int dest, int c) : destNode_(dest), currentFlow_(0), capacity_(c) {}
 };
 
 struct Node {

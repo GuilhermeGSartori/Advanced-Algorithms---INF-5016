@@ -27,13 +27,15 @@ void read_graph(std::istream& in, unsigned& n, unsigned& m, unsigned& s, unsigne
 	    if(line.find("s") != std::string::npos) {
 		std::stringstream s_line(line);
 		s_line >> n >> s >> stc;
-		graph_in_solver.setS(s);
+		s--;
+		graph_in_solver.setS(s-1);
 	        found_s = true;
 	    }
 	    if(line.find("t") != std::string::npos) {
 		std::stringstream t_line(line);
 		t_line >> n >> t >> stc;
-		graph_in_solver.setT(t);
+		t--;
+		graph_in_solver.setT(t-1);
 		found_t = true;
 	    }
 	}

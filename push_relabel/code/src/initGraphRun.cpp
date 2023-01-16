@@ -4,7 +4,7 @@
 //#include "../include/util.h"
 
 // Parece que tem como colocar isso no make
-#define TEST
+#define OPERATIONAL
 
 void help() {}
 
@@ -26,10 +26,11 @@ int main(int argc, char** argv) {
     Operations max_flow_ops;
     unsigned s, t;
     PushRelabel solver;
-    //std::cout << "graph will be read\n";
+    std::cout << "graph will be read\n";
     read_graph(std::cin, n, m, s, t, solver);
-    //std::cout << "graph WAS read\n";
-    // output = solver.runMaxFlow(); -> to do
+    std::cout << "graph WAS read\n";
+    output = solver.getMaxFlow(s, t);
+    std::cout << "flow: " << output << "\n";
     //check max flow and output -> nao termina se impossivel? ver isso, estudar mais algoritmo
     /*end of required modifications*/
 

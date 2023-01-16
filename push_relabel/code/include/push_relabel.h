@@ -30,6 +30,6 @@ public:
     bool vIsRightBelow(Node, Node);
 
     // Main Max Flow S-T problem function
-    void getMaxFlow(int s, int t);
+    int getMaxFlow(int s, int t);
     void buildAlreadyBelow(int u);
 };
