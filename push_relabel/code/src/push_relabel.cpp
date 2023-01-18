@@ -34,24 +34,13 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
     v_n.excessFlow_ += extra_flow;
     PushRelabel::setGraphNode(v_n, v); 
         
-    std::pair<Node, std::vector<Edge>> full_adj = PushRelabel::getAdjacencyList(v);
-    std::vector<Edge> adj_list = full_adj.second; 
-    for(int i=0;i<adj_list.size();i++) {
-	if(adj_list[i].destNode_ == u) {
-	    Edge vu = PushRelabel::getGraphEdge(v, u, i);
-            vu.currentFlow_ -= extra_flow;
-	    PushRelabel::setGraphEdge(v, u, vu, i);
-	    return true;
-	}
-    }
-    // ISSO AVACALHA COMPLEXIDADE SIM! POIS PARA CADA PUSH SERIA PERCORRIDO O(n-1) (edges) PARA MERGEAR, SENDO QUE DA PRA FAZER TUDO DE UMA VEZ PERCORRENDO 2 VEZES OS EDGES EM VEZ DE N(pode rolar N PUSH
-
     // Creates reverse edge V->U in the residual graph to enable flow return
     PushRelabel::addEdge(v, u, extra_flow);
     return true;
 }
 
-/*void PushRelabel::mergeOutEdges(int u) {
+
+void PushRelabel::mergeOutEdges(int u) {
     int n = PushRelabel::getNumberOfNodes();
     int merger[n];
     for(int i=0;i<n;i++)
@@ -59,7 +48,6 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
 
     int current_edge = 0;
     bool merged_all = false;
-    int start_of_repeats = -1;
     while(!merged_all) {
 	std::vector<Edge> out_edges = PushRelabel::getAdjacencyList(u).second;
         if(current_edge == out_edges.size())
@@ -72,32 +60,15 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
 	        current_edge++;
 	    }
 	    else {
-		if(start_of_repeats == -1)
-		    start_of_repeats = current_edge;
 	        int first_found_idx = merger[v];
 	        Edge og_uv = PushRelabel::getGraphEdge(u, v, first_found_idx);
-		//Edge nw_uv = PushRelabel::getGraphEdge(u, v, current_edge);
-		//if(nw_uv.capacity_ == 0) {
 	        og_uv.currentFlow_ -= out_edges[current_edge].capacity_;
 		PushRelabel::setGraphEdge(u, v, og_uv, first_found_idx);
-	        PushRelabel::removeGraphEdge(u, v, current_edge); // a ultima provavelmente vai ser reverse tambem
-		//}
-		else {
-                    nw_uv.currentFlow_ -= out_edges[first_found_idx].capacity_;
-                    PushRelabel::setGraphEdge(u, v, og_uv, current_edge);
-                    PushRelabel::removeGraphEdge(u, v, first_found_idx); // a ultima provavelmente vai ser reverse tambem
-		    last = current_edge;
-	        } 
-	       	//teoricamente soh trocaria com edges novos tambem e tals, nenhum dos novos sofreria essas coisas de remove.. ENTAO EH ISSO! DAR POP A PARTIR DO PRIMEIRO MOMENTO QUE ACHOU REPETIDO!
+	        PushRelabel::removeGraphEdge(u, v, current_edge); 
 	    }
 	}
     }
-    if(start_of_repeats != -1) {
-        for(int i=out_edges.size();i>start_of_repeats;i--) 
- 	    
-        
-    }
-}*/
+}
 
 
 void PushRelabel::relabel(int u) { // -> O(2n(n-2))... O(2M)... 
@@ -106,9 +77,8 @@ void PushRelabel::relabel(int u) { // -> O(2n(n-2))... O(2M)...
  
     std::pair<Node, std::vector<Edge>> full_adj = PushRelabel::getAdjacencyList(u);
     std::vector<Edge> adj_list = full_adj.second;
-    // Linear loop to merge out edges native to the graph and out edges created by the residual graphc- NOT
-
     Node n_u = PushRelabel::getGraphNode(u);
+
     // Linear loop to find the "v" nodes with the smallest height but taller than u (future push contenders)
     for(int i=0;i<adj_list.size();i++) {
 	int neighbor = adj_list[i].destNode_;
@@ -157,24 +127,13 @@ void PushRelabel::preFlow(int s) {
     std::pair<Node,std::vector<Edge>> adj_list = PushRelabel::getAdjacencyList(s);
     std::vector<Edge> out_edges = adj_list.second;
     for(int i=0;i<out_edges.size();i++) {
-        Edge uv = PushRelabel::getGraphEdge(s, 0, i); // replace zero later
+	int v = out_edges[i].destNode_;
+
+        Edge uv = PushRelabel::getGraphEdge(s, v, i);
 	uv.currentFlow_ = uv.capacity_;
-	PushRelabel::setGraphEdge(s, 0, uv, i);
-        bool has_edge = false;
-	int v = uv.destNode_;
-	std::pair<Node, std::vector<Edge>> full_adj = PushRelabel::getAdjacencyList(v);
-        std::vector<Edge> adj_list = full_adj.second;
-        for(int j=0;j<adj_list.size();j++) {
-            if(adj_list[j].destNode_ == s) {
-		Edge vu = PushRelabel::getGraphEdge(v, s, j);
-                vu.currentFlow_ -= uv.currentFlow_;
-		PushRelabel::setGraphEdge(v, s, vu, j);
-		has_edge =  true;
-		break;
-            }
-        }
-        if(!has_edge)
-	    PushRelabel::addEdge(out_edges[i].destNode_, s, uv.currentFlow_);
+	PushRelabel::setGraphEdge(s, v, uv, i);
+	
+	PushRelabel::addEdge(v, s, uv.currentFlow_);
 
 	Node n_v = PushRelabel::getGraphNode(v);
 	n_v.excessFlow_ = uv.currentFlow_;
@@ -213,7 +172,7 @@ int PushRelabel::getMaxFlow(int s, int t) {
        
 	if(active_u != -1) {
 	    // O(n-1)
-            //PushRelabel::mergeOutEdges(active_u);
+            PushRelabel::mergeOutEdges(active_u);
 	   
 	    // Linear search O(n-1) (all nodes related to U out edges) to find the Vs that are exactly below U (h-h == 1)
             PushRelabel::buildAlreadyBelow(active_u);

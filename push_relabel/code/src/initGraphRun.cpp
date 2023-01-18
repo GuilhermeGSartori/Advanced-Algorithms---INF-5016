@@ -26,12 +26,12 @@ int main(int argc, char** argv) {
     Operations max_flow_ops;
     unsigned s, t;
     PushRelabel solver;
-    std::cout << "graph will be read\n";
+
     read_graph(std::cin, n, m, s, t, solver);
-    std::cout << "graph WAS read\n";
+
     output = solver.getMaxFlow(s, t);
-    std::cout << "flow: " << output << "\n";
-    //check max flow and output -> nao termina se impossivel? ver isso, estudar mais algoritmo
+    std::cout << "max flow: " << output << "\n";
+
     /*end of required modifications*/
 
     return 0;
