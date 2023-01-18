@@ -32,4 +32,5 @@ public:
     // Main Max Flow S-T problem function
     int getMaxFlow(int s, int t);
     void buildAlreadyBelow(int u);
+    void mergeOutEdges(int u);
 };
