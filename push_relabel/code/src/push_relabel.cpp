@@ -169,9 +169,13 @@ int PushRelabel::getMaxFlow(int s, int t) {
         if(!PushRelabel::priority_.empty()) {
             active_u = priority_.front();
 	    priority_.pop();
-	    if(active_u == s or active_u == t) {
+	    bool s_or_t = (active_u == s or active_u == t);
+	    if((s_or_t) and !PushRelabel::priority_.empty()) {
 	        active_u = priority_.front();
 		priority_.pop();
+	    }
+	    else if(s_or_t) {
+	        active_u = -1;
 	    }
 	}
        
