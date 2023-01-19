@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <queue>
 
 struct Operations {};
 
@@ -8,7 +9,10 @@ class PushRelabel : public Graph {
 private: 
     // Start and Target
     int s_, t_;
-    
+ 
+    // Priotity List
+    std::queue<int> priority_;
+
     // Pre-Flow Initialization
     void preFlow(int s);
 

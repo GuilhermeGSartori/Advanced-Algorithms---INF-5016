@@ -22,7 +22,7 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
     int extra_flow = std::min(uv_current_cap, u_n.excessFlow_);
 
     // flow leaves U and V is removed from the push contenders
-    u_n.excessFlow_ -= extra_flow;                    
+    u_n.excessFlow_ -= extra_flow;
     u_n.priority_.pop_back();
     PushRelabel::setGraphNode(u_n, u);
         
@@ -30,8 +30,12 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
     uv.currentFlow_ = uv.currentFlow_ + extra_flow;
     PushRelabel::setGraphEdge(u, v, uv, uv_idx);
 
-    // flow enters V
+    // flow enters V and it is now active (if it wasnt already)
     v_n.excessFlow_ += extra_flow;
+    if(!v_n.active_) {
+        v_n.active_ = true;
+	PushRelabel::priority_.push(v);
+    }
     PushRelabel::setGraphNode(v_n, v); 
         
     // Creates reverse edge V->U in the residual graph to enable flow return
@@ -137,6 +141,8 @@ void PushRelabel::preFlow(int s) {
 
 	Node n_v = PushRelabel::getGraphNode(v);
 	n_v.excessFlow_ = uv.currentFlow_;
+	n_v.active_ = true;
+	PushRelabel::priority_.push(v);
 	PushRelabel::setGraphNode(n_v, v);
     }
 }
@@ -156,18 +162,17 @@ int PushRelabel::getMaxFlow(int s, int t) {
     // O(n)
     while(active_exists) {
 
-	// Linear search O(n) (search all nodes in graph) to find the tallest node with excess
-        int active_u = -1;
-	int tallest_h = -1;
-	std::vector<std::pair<Node,std::vector<Edge>>> graph;
-	graph = PushRelabel::getGraph();
-	for(int i=0;i<PushRelabel::getNumberOfNodes();i++) {
-	    bool isActive = (i != s and i != t) & (graph[i].first.excessFlow_ > 0);
-	    bool tallestActive = isActive & (graph[i].first.h_ > tallest_h);
-	    if(tallestActive) {
-	        active_u = i;
-		tallest_h = graph[i].first.h_;
-            }    
+	// Uses FIFO to find the next node (will it always find the tallest one?)
+        // Why?
+	int active_u = -1;
+	
+        if(!PushRelabel::priority_.empty()) {
+            active_u = priority_.front();
+	    priority_.pop();
+	    if(active_u == s or active_u == t) {
+	        active_u = priority_.front();
+		priority_.pop();
+	    }
 	}
        
 	if(active_u != -1) {
@@ -181,7 +186,7 @@ int PushRelabel::getMaxFlow(int s, int t) {
             // O(n) -> if U points to every other node and needs to push it to everyone
 	    while(uIsActive(u_n)) { // Active = has excess
                  
-		// PushRelabel::mergeOutEdges(active_u);    
+		PushRelabel::mergeOutEdges(active_u);    
 		// There are V nodes (they are on the priority list) that can receive a push (UV has capacity and V is right below)
 	        if(!u_n.priority_.empty()) { 
 		    int sz = u_n.priority_.size();
@@ -197,6 +202,8 @@ int PushRelabel::getMaxFlow(int s, int t) {
 		}
 	        u_n = PushRelabel::getGraphNode(active_u);
 	    }
+	    u_n.active_ = false;
+	    PushRelabel::setGraphNode(u_n, active_u);
 	}
 	else
             active_exists = false;

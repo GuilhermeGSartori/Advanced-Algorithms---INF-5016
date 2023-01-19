@@ -15,6 +15,7 @@ struct Edge {
 struct Node {
     int h_ = 0;
     int excessFlow_ = 0;
+    bool active_ = false;
     std::vector<std::pair<int,int>> priority_;
 };
 /*End of problem related structures*/
