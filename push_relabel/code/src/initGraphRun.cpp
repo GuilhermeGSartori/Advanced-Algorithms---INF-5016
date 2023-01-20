@@ -34,10 +34,8 @@ int main(int argc, char** argv) {
 
     read_graph(std::cin, n, m, s, t, solver);
 
-    //std::chrono::system_clock::time_point t = std::chrono::system_clock::now();
     std::chrono::system_clock::time_point t_start = std::chrono::system_clock::now();
     output = solver.getMaxFlow(s, t, max_flow_ops);
-    //auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-t).count();
     auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-t_start).count();
 
     time = static_cast<int>(run_time);
