@@ -148,7 +148,7 @@ void PushRelabel::preFlow(int s) {
 }
 
 // Complexity: O(n) * (O(n) + O(n-1) + O(n-1) + (O(n)*O(1)*O(n)))
-int PushRelabel::getMaxFlow(int s, int t) {
+int PushRelabel::getMaxFlow(int s, int t, Operations& max_flow_ops) {
 
     Node n_s = PushRelabel::getGraphNode(s);
     n_s.h_ = PushRelabel::getNumberOfNodes();
@@ -198,11 +198,13 @@ int PushRelabel::getMaxFlow(int s, int t) {
 		    int v_idx = u_n.priority_[sz-1].second;
 		    // O(1)
 		    PushRelabel::push(active_u, v, v_idx);
+		    max_flow_ops.pushes_++;
 	        }
 
 	        else {
 		    // O(n)
 		    PushRelabel::relabel(active_u);
+		    max_flow_ops.relabels_++;
 		}
 	        u_n = PushRelabel::getGraphNode(active_u);
 	    }

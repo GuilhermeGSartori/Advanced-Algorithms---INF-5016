@@ -1,7 +1,10 @@
 #include "graph.h"
 #include <queue>
 
-struct Operations {};
+struct Operations {
+    int pushes_ = 0;
+    int relabels_ = 0;
+};
 
 
 class PushRelabel : public Graph {
@@ -34,7 +37,7 @@ public:
     bool vIsRightBelow(Node, Node);
 
     // Main Max Flow S-T problem function
-    int getMaxFlow(int s, int t);
+    int getMaxFlow(int s, int t, Operations&);
     void buildAlreadyBelow(int u);
     void mergeOutEdges(int u);
 };

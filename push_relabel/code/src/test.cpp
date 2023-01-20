@@ -5,7 +5,17 @@
 #include <cassert>
 #include "../include/test.h"
 
-// CHECK WHAT NEEDS TO BE UPDATED (priorityList vector (node strcut new attribute))
+
+// PushRelabel Function Tests - TBD
+
+// Edge Testes - TBD
+
+// Node Priority List Test - TBD
+
+
+// generate new graph, feed it to the solver and then my solver and assert?
+    // use a bash for it... 
+
 bool testNodeUpdates(PushRelabel& graph_in_solver) {
     std::ifstream input_graph("graphs/updates.txt");
     unsigned m, n, s, t;
@@ -52,6 +62,18 @@ bool testNodeUpdates(PushRelabel& graph_in_solver) {
 	else
 	    keep_updating = false;
     }
+
+    Node node_n = graph_in_solver.getGraphNode(node-1);
+    
+    std::cout << "Node Active: false\n";
+    assert(node_n.active_ == false);
+
+    node_n.active_ = true;
+    graph_in_solver.setGraphNode(node_n, node-1);
+    Node active_n = graph_in_solver.getGraphNode(node-1);
+    
+    std::cout << "Node Active: true\n";
+    assert(active_n.active_ == true);
 
     return true;
     // faz o mesmo com edge (pergunta u e depois v), u out of range sai, u->v q nao existe soh diz -> outra funcao?

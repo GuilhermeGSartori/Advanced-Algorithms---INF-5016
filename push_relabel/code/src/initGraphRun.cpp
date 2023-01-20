@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <random>
 //#include "../include/test.h"
 #include "../include/test_map.h"
 //#include "../include/util.h"
@@ -13,6 +15,9 @@ int main(int argc, char** argv) {
 
     unsigned n, m;
     int output = 0;
+    int time;
+    std::random_device rd;
+    std::mt19937 gen(rd());
 
     /* adapt expected argc for the problem */
     if(argc != 1) {
@@ -29,8 +34,16 @@ int main(int argc, char** argv) {
 
     read_graph(std::cin, n, m, s, t, solver);
 
-    output = solver.getMaxFlow(s, t);
-    std::cout << "max flow: " << output << "\n";
+    //std::chrono::system_clock::time_point t = std::chrono::system_clock::now();
+    std::chrono::system_clock::time_point t_start = std::chrono::system_clock::now();
+    output = solver.getMaxFlow(s, t, max_flow_ops);
+    //auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-t).count();
+    auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-t_start).count();
+
+    time = static_cast<int>(run_time);
+    std::cout << "n = " << n << ", max flow: " << output;
+    std::cout << ", time: " << time << ", pushes: " << max_flow_ops.pushes_;
+    std::cout << ", relabel: " << max_flow_ops.relabels_ << "\n"; 
 
     /*end of required modifications*/
 
