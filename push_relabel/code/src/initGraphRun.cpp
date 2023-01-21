@@ -39,9 +39,8 @@ int main(int argc, char** argv) {
     auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-t_start).count();
 
     time = static_cast<int>(run_time);
-    std::cout << "n = " << n << ", max flow: " << output;
-    std::cout << ", time: " << time << ", pushes: " << max_flow_ops.pushes_;
-    std::cout << ", relabel: " << max_flow_ops.relabels_ << "\n"; 
+    std::cout << n << ", " << output << ", " << time << ", " << max_flow_ops.pushes_;
+    std::cout << ", " << max_flow_ops.relabels_ << "\n"; 
 
     /*end of required modifications*/
 

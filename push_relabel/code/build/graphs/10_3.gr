@@ -1,0 +1,25 @@
+c Random Leveled Graph
+c 4 Rows, 2 columns, capacities in range [0, 20]
+p max 10 20
+n 1 s
+n 10 t
+a 1 5 60
+a 1 4 60
+a 1 3 60
+a 1 2 60
+a 2 7 16
+a 2 8 14
+a 2 9 16
+a 3 7 8
+a 3 6 3
+a 3 8 2
+a 4 6 17
+a 4 9 13
+a 4 8 7
+a 5 7 3
+a 5 6 11
+a 5 9 3
+a 6 10 60
+a 7 10 60
+a 8 10 60
+a 9 10 60

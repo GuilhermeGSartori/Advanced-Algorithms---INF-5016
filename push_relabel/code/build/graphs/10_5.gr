@@ -1,0 +1,29 @@
+c Matching Graph
+c 4 vertices, 4 degree
+p max 10 24
+n 1 s
+n 10 t
+a 1 5 1
+a 1 4 1
+a 1 3 1
+a 1 2 1
+a 2 6 1
+a 2 7 1
+a 2 8 1
+a 2 9 1
+a 3 6 1
+a 3 9 1
+a 3 8 1
+a 3 7 1
+a 4 7 1
+a 4 9 1
+a 4 6 1
+a 4 8 1
+a 5 6 1
+a 5 7 1
+a 5 9 1
+a 5 8 1
+a 6 10 1
+a 7 10 1
+a 8 10 1
+a 9 10 1
