@@ -4,15 +4,9 @@
 bool Graph::addEdge(int u, int v, int w) {
 
     if(u < numberOfNodes_ and v < numberOfNodes_) {
-	//std::cout << "n: " << numberOfNodes_ << "\n";
-	//std::cout << "muahaha\n";
-	//NEW
 	int edge_pos = Graph::graph_[u].second.size();
-        //END
 	Graph::graph_[u].second.push_back(Edge(v, w));
-	//NEW
 	Graph::graph_[u].first.edgesMap_[v] = edge_pos;
-        //END
 	return true;
     }
     return false;

@@ -13,8 +13,8 @@ private:
     // Start and Target
     int s_, t_;
  
+    // Height and Width -> Open Pit Mining
     int h_, w_;
-    //std::vector<std::pair<int,int>> capturedCells_;
 
     // Priotity List
     std::queue<int> priority_;

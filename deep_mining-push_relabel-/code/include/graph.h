@@ -18,7 +18,7 @@ struct Node {
     int excessFlow_ = 0;
     bool active_ = false;
     std::vector<std::pair<int,int>> priority_;
-    std::unordered_map<int,int> edgesMap_; // exclusive atrbt for deep mining. Heuristic to avoid merge loop
+    std::unordered_map<int,int> edgesMap_;
 };
 /*End of problem related structures*/
 
@@ -28,14 +28,12 @@ struct Node {
 class Graph {
 
 private:
-    // Graph used to read the input file and residual graph (data manipulation) will be the same
-    // Graph size = n(Nodes) + m(Edges) -> entender melhor isso.. Default pair, vetor, referencia, vetor vazio, alocar
     int numberOfNodes_;
-    //std::vector<std::pair<Node, std::vector<Edge>>> graph_;
 
 public:
-    // changes for optimization purposes!
+    // changes for optimization purposes! -> graph is now public
     std::vector<std::pair<Node, std::vector<Edge>>> graph_;
+
     // Constructor and allocation
     Graph() : numberOfNodes_(0) {}
     inline void allocateVectors() {graph_.resize(numberOfNodes_, std::pair<Node, std::vector<Edge>>());}
