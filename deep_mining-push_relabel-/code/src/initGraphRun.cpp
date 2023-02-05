@@ -38,9 +38,7 @@ int main(int argc, char** argv) {
         for(int j=0;j<solver.getW();j++) {
 	    matrix[i][j].first = false;
 	    matrix[i][j].second = false;
-	    std::cout << 0 << " ";
 	}
-	std::cout << "\n";
     }
     for(int i=0;i<solver.capturedCells_.size();i++) {
 	std::pair<int,int> cell(solver.capturedCells_[solver.capturedCells_.size()-i-1].first,solver.capturedCells_[solver.capturedCells_.size()-i-1].second);
@@ -63,7 +61,8 @@ int main(int argc, char** argv) {
 	    }
         }
     }
-    std::cout << "\n";
+    std::cout << "P1\n";
+    std::cout << solver.getH() << " " << solver.getW() << "\n";
     for(int i=0;i<solver.getH();i++) {
         for(int j=0;j<solver.getW();j++) {
             if(matrix[i][j].first)
@@ -76,8 +75,8 @@ int main(int argc, char** argv) {
     auto run_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-t_start).count();
 
     time = static_cast<int>(run_time);
-    std::cout << "Max Flow: " << output << "\n"; 
-    std::cout << "Time: " << time << "\n";
+    std::cerr << "Max Profit: " << output << "\n"; 
+    //std::cout << "Time: " << time << "\n";
 
     /*end of required modifications*/
 
