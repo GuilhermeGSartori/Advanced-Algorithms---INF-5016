@@ -31,9 +31,11 @@ private:
     // Graph used to read the input file and residual graph (data manipulation) will be the same
     // Graph size = n(Nodes) + m(Edges) -> entender melhor isso.. Default pair, vetor, referencia, vetor vazio, alocar
     int numberOfNodes_;
-    std::vector<std::pair<Node, std::vector<Edge>>> graph_;
+    //std::vector<std::pair<Node, std::vector<Edge>>> graph_;
 
 public:
+    // changes for optimization purposes!
+    std::vector<std::pair<Node, std::vector<Edge>>> graph_;
     // Constructor and allocation
     Graph() : numberOfNodes_(0) {}
     inline void allocateVectors() {graph_.resize(numberOfNodes_, std::pair<Node, std::vector<Edge>>());}

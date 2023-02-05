@@ -13,19 +13,26 @@ bool PushRelabel::vIsRightBelow(Node u, Node v) {
 
 
 bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
-    Node u_n = PushRelabel::getGraphNode(u);
-    Node v_n = PushRelabel::getGraphNode(v);
+    //Node u_n = PushRelabel::getGraphNode(u);
+    //Node v_n = PushRelabel::getGraphNode(v);
     Edge uv = PushRelabel::getGraphEdge(u, v, uv_idx);
 
 
     // Can push to the limit of the edge OR all the excess in U
     int uv_current_cap = uv.capacity_ - uv.currentFlow_;
-    int extra_flow = std::min(uv_current_cap, u_n.excessFlow_);
+    //int extra_flow = std::min(uv_current_cap, u_n.excessFlow_);
+    int extra_flow = std::min(uv_current_cap, PushRelabel::graph_[u].first.excessFlow_);
 
     // flow leaves U and V is removed from the push contenders
-    u_n.excessFlow_ -= extra_flow;
-    u_n.priority_.pop_back();
-    PushRelabel::setGraphNode(u_n, u);
+    
+    //u_n.excessFlow_ -= extra_flow;
+    PushRelabel::graph_[u].first.excessFlow_ -= extra_flow;
+
+    //u_n.priority_.pop_back();
+    PushRelabel::graph_[u].first.priority_.pop_back();
+
+    //PushRelabel::setGraphNode(u_n, u);
+    
     if(v == 0) { // v is s
 	//std::cout << "i am: " << u << "\n";
         int line = (u-1)/PushRelabel::w_;
@@ -37,19 +44,24 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
     }
         
     // flow occupies edge UV
-    uv.currentFlow_ = uv.currentFlow_ + extra_flow;
+    uv.currentFlow_ = uv.currentFlow_ + extra_flow; //acho que os edges nao tem problema... So setando struct...
     PushRelabel::setGraphEdge(u, v, uv, uv_idx);
 
     // flow enters V and it is now active (if it wasnt already)
-    v_n.excessFlow_ += extra_flow;
-    if(!v_n.active_) {
-        v_n.active_ = true;
+    //v_n.excessFlow_ += extra_flow;
+    PushRelabel::graph_[v].first.excessFlow_ += extra_flow;
+    
+    //if(!v_n.active_) {
+    if(!PushRelabel::graph_[v].first.active_) { 
+        //v_n.active_ = true;
+	PushRelabel::graph_[v].first.active_ = true;
 	PushRelabel::priority_.push(v);
     }
-    PushRelabel::setGraphNode(v_n, v); 
+    //PushRelabel::setGraphNode(v_n, v); 
         
     // Creates reverse edge V->U in the residual graph to enable flow return
-    int vu_pos =  v_n.edgesMap_[u];
+    //int vu_pos =  v_n.edgesMap_[u];
+    int vu_pos = PushRelabel::graph_[v].first.edgesMap_[u];
     if(vu_pos > 0) {
         Edge vu = PushRelabel::getGraphEdge(v, u, vu_pos);
 	vu.currentFlow_ -= extra_flow;
@@ -63,7 +75,7 @@ bool PushRelabel::push(int u, int v, int uv_idx) { // -> O(1)
 }
 
 
-void PushRelabel::mergeOutEdges(int u) {
+/*void PushRelabel::mergeOutEdges(int u) {
     int n = PushRelabel::getNumberOfNodes();
     //std::cout << "eh o n: " << n << "\n";
     int merger[n];
@@ -96,7 +108,7 @@ void PushRelabel::mergeOutEdges(int u) {
 	    }
 	}
     }
-}
+}*/
 
 
 void PushRelabel::relabel(int u) { // -> O(2n(n-2))... O(2M)... 
@@ -104,42 +116,58 @@ void PushRelabel::relabel(int u) { // -> O(2n(n-2))... O(2M)...
     int min_h = INF;
     //bool can_equal = false; //test
  
-    std::pair<Node, std::vector<Edge>> full_adj = PushRelabel::getAdjacencyList(u);
-    std::vector<Edge> adj_list = full_adj.second;
-    Node n_u = PushRelabel::getGraphNode(u);
+    //std::pair<Node, std::vector<Edge>> full_adj = PushRelabel::getAdjacencyList(u);
+    //std::vector<Edge> adj_list = full_adj.second;
+    //Node n_u = PushRelabel::getGraphNode(u);
 
     // Linear loop to find the "v" nodes with the smallest height but taller than u (future push contenders)
-    for(int i=0;i<adj_list.size();i++) {
-	int neighbor = adj_list[i].destNode_;
-	int uv_current_c = adj_list[i].capacity_ - adj_list[i].currentFlow_;
-	Node v = PushRelabel::getGraphNode(neighbor);
+    //for(int i=0;i<adj_list.size();i++) {
+    for(int i=0;i<graph_[u].second.size();i++) {
+        //int neighbor = adj_list[i].destNode_;
+	int neighbor = graph_[u].second[i].destNode_;
+	
+	//int uv_current_c = adj_list[i].capacity_ - adj_list[i].currentFlow_;
+	int uv_current_c = graph_[u].second[i].capacity_ - graph_[u].second[i].currentFlow_;
+	
+	//Node v = PushRelabel::getGraphNode(neighbor);
 	std::pair<int,int> contender(neighbor, i);
-	if(v.h_ < min_h and v.h_ >= n_u.h_ and uv_current_c > 0) { 
-	    min_h = v.h_;
+	//if(v.h_ < min_h and v.h_ >= n_u.h_ and uv_current_c > 0) { 
+	if(graph_[neighbor].first.h_ < min_h and graph_[neighbor].first.h_ >= graph_[u].first.h_ and uv_current_c > 0) {
+            //min_h = v.h_;
+	    min_h = graph_[neighbor].first.h_;
 	    //std::vector<std::pair<int,int>> new_priority;
-            n_u.priority_.clear(); //O(n) -> acho que aqui zoa complexidade... Mesmo assim, acho que nao ia passar de 2n... pq o clear vai ser em subsets do n... nao em seu total.. sempre avanca..
-	    n_u.priority_.push_back(contender);
+            //n_u.priority_.clear(); //O(n) -> acho que aqui zoa complexidade... Mesmo assim, acho que nao ia passar de 2n... pq o clear vai ser em subsets do n... nao em seu total.. sempre avanca..
+	    graph_[u].first.priority_.clear();
+
+	    //n_u.priority_.push_back(contender);
+	    graph_[u].first.priority_.push_back(contender);
+
 	    //new_priority.push_back(contender);
 	    //can_equal = true;
 	}
-	else if(v.h_ == min_h and uv_current_c > 0) {
-	    n_u.priority_.push_back(contender);
+	//else if(v.h_ == min_h and uv_current_c > 0) {
+	else if(graph_[neighbor].first.h_ == min_h and uv_current_c > 0) {
+            //n_u.priority_.push_back(contender);
+	    graph_[u].first.priority_.push_back(contender);
+	    
 	    //new_priority.push_back(contender);
 	}
     }
-    if(min_h < INF)
-        n_u.h_ = min_h+1;
+    if(min_h < INF) {
+        //n_u.h_ = min_h+1;
+        graph_[u].first.h_ = min_h+1;
+    }
     else
 	std::cout << "This should not be possible\n";
 
     //n_u.priority_ = new_priority;
-    PushRelabel::setGraphNode(n_u, u);
+    //PushRelabel::setGraphNode(n_u, u);
 }
 
 
 void PushRelabel::buildAlreadyBelow(int u) {// acho que eh isso, nao tem o q mudar
 
-    Node n_u = PushRelabel::getGraphNode(u);
+    //Node n_u = PushRelabel::getGraphNode(u);
     
     // this doesnt work...
     /*//std::vector<std::pair<int,int>> old_priority_ = n_u.priority_; 
@@ -155,31 +183,42 @@ void PushRelabel::buildAlreadyBelow(int u) {// acho que eh isso, nao tem o q mud
     }
     n_u.priority_ = new_priority;*/
     
-    n_u.priority_.clear(); //O(n)
+    //n_u.priority_.clear(); //O(n)
+    graph_[u].first.priority_.clear();
 
-    std::vector<Edge> out_edges = PushRelabel::getAdjacencyList(u).second;
+    //std::vector<Edge> out_edges = PushRelabel::getAdjacencyList(u).second;
 
-    for(int i=0;i<out_edges.size();i++) {
-	//std::cout << "build main loop\n";
-        int neighbor = out_edges[i].destNode_;
+    //for(int i=0;i<out_edges.size();i++) {
+    for(int i=0;i<graph_[u].second.size();i++) {
+        //std::cout << "build main loop\n";
+        //int neighbor = out_edges[i].destNode_;
+	int neighbor = graph_[u].second[i].destNode_;
+
 	std::pair<int,int> contender(neighbor, i);
 
-	Node n_v = PushRelabel::getGraphNode(neighbor);
-        int uv_true_capacity = out_edges[i].capacity_ - out_edges[i].currentFlow_;
+	//Node n_v = PushRelabel::getGraphNode(neighbor);
+        //int uv_true_capacity = out_edges[i].capacity_ - out_edges[i].currentFlow_;
+        int uv_true_capacity = graph_[u].second[i].capacity_ - graph_[u].second[i].currentFlow_;
 
-	if(vIsRightBelow(n_u, n_v) and uv_true_capacity > 0) 
-	    n_u.priority_.push_back(contender);
+	/*if(vIsRightBelow(n_u, n_v) and uv_true_capacity > 0) 
+	    n_u.priority_.push_back(contender);*/
+	if((graph_[u].first.h_-1 == graph_[neighbor].first.h_) and uv_true_capacity > 0)
+	    graph_[u].first.priority_.push_back(contender);
     }
 
-    PushRelabel::setGraphNode(n_u, u);
+    //PushRelabel::setGraphNode(n_u, u);
 }
 
 void PushRelabel::preFlow(int s) {
-    std::pair<Node,std::vector<Edge>> adj_list = PushRelabel::getAdjacencyList(s);
-    std::vector<Edge> out_edges = adj_list.second;
-    for(int i=0;i<out_edges.size();i++) {
-	//std::cout << "size: " << out_edges.size() << "\n";
-	int v = out_edges[i].destNode_;
+    //std::pair<Node,std::vector<Edge>> adj_list = PushRelabel::getAdjacencyList(s);
+    //std::vector<Edge> out_edges = adj_list.second;
+    
+    //for(int i=0;i<out_edges.size();i++) {
+    for(int i=0;i<graph_[s].second.size();i++) {
+        //std::cout << "size: " << out_edges.size() << "\n";
+	//int v = out_edges[i].destNode_;
+	int v = graph_[s].second[i].destNode_;
+
 	//std::cout << "s to v: " << v << "\n";
 
         Edge uv = PushRelabel::getGraphEdge(s, v, i);
@@ -190,9 +229,11 @@ void PushRelabel::preFlow(int s) {
 	
 	
 	// NEW STUFF
-	Node n_v = PushRelabel::getGraphNode(v);
-	int vu_pos = n_v.edgesMap_[s];
-        if(vu_pos > 0) {
+	//Node n_v = PushRelabel::getGraphNode(v);
+	//int vu_pos = n_v.edgesMap_[s];
+        int vu_pos = graph_[v].first.edgesMap_[s];
+
+	if(vu_pos > 0) {
             Edge vu = PushRelabel::getGraphEdge(v, s, vu_pos);
             vu.currentFlow_ -= uv.currentFlow_;
             PushRelabel::setGraphEdge(v, s, vu, vu_pos);
@@ -206,19 +247,24 @@ void PushRelabel::preFlow(int s) {
 	//PushRelabel::addEdge(v, s, uv.currentFlow_);
 	//Node n_v = PushRelabel::getGraphNode(v);
 	
-	n_v.excessFlow_ = uv.currentFlow_;
-	n_v.active_ = true;
+	//n_v.excessFlow_ = uv.currentFlow_;
+	graph_[v].first.excessFlow_ = uv.currentFlow_;
+
+	//n_v.active_ = true;
+	graph_[v].first.active_ = true;
+
 	PushRelabel::priority_.push(v);
-	PushRelabel::setGraphNode(n_v, v);
+	//PushRelabel::setGraphNode(n_v, v);
     }
 }
 
 // Complexity: O(n) * (O(n) + O(n-1) + O(n-1) + (O(n)*O(1)*O(n)))
 int PushRelabel::getMaxFlow(int s, int t, Operations& max_flow_ops) {
 
-    Node n_s = PushRelabel::getGraphNode(s);
-    n_s.h_ = PushRelabel::getNumberOfNodes();
-    PushRelabel::setGraphNode(n_s, s);
+    //Node n_s = PushRelabel::getGraphNode(s);
+    //n_s.h_ = PushRelabel::getNumberOfNodes();
+    graph_[s].first.h_ = PushRelabel::getNumberOfNodes();
+    //PushRelabel::setGraphNode(n_s, s);
     // O(?)
     PushRelabel::preFlow(s);
     
@@ -254,22 +300,30 @@ int PushRelabel::getMaxFlow(int s, int t, Operations& max_flow_ops) {
 	    // Linear search O(n-1) (all nodes related to U out edges) to find the Vs that are exactly below U (h-h == 1)
             PushRelabel::buildAlreadyBelow(active_u);
 	    //std::cout << "after build\n";
-	    Node u_n = PushRelabel::getGraphNode(active_u);
+	    //Node u_n = PushRelabel::getGraphNode(active_u);
 	    //std::cout << "after get\n";
 
             // O(n) -> if U points to every other node and needs to push it to everyone
-	    while(uIsActive(u_n)) { // Active = has excess
-                //std::cout << "active: " << active_u << "\n";
+	    //while(uIsActive(u_n)) { // Active = has excess
+            while(graph_[active_u].first.excessFlow_ > 0) { 
+	        //std::cout << "active: " << active_u << "\n";
 		//PushRelabel::mergeOutEdges(active_u);    
 		// There are V nodes (they are on the priority list) that can receive a push (UV has capacity and V is right below)
-	        if(!u_n.priority_.empty()) { 
-		    int sz = u_n.priority_.size();
-		    int v = u_n.priority_[sz-1].first;
-		    int v_idx = u_n.priority_[sz-1].second;
+	        //if(!u_n.priority_.empty()) { 
+		if(!graph_[active_u].first.priority_.empty()) {
+		    //int sz = u_n.priority_.size();
+		    int sz = graph_[active_u].first.priority_.size();
+
+		    //int v = u_n.priority_[sz-1].first;
+		    int v = graph_[active_u].first.priority_[sz-1].first;
+
+		    //int v_idx = u_n.priority_[sz-1].second;
+		    int v_idx = graph_[active_u].first.priority_[sz-1].second;
+		    
 		    // O(1)
 		    PushRelabel::push(active_u, v, v_idx);
 		    max_flow_ops.pushes_++;
-		    std::cout << "PUSHES: " << max_flow_ops.pushes_ << "\n";
+		    //std::cout << "PUSHES: " << max_flow_ops.pushes_ << "\n";
 	        }
 
 	        else {
@@ -277,10 +331,11 @@ int PushRelabel::getMaxFlow(int s, int t, Operations& max_flow_ops) {
 		    PushRelabel::relabel(active_u);
 		    max_flow_ops.relabels_++;
 		}
-	        u_n = PushRelabel::getGraphNode(active_u);
+	        //u_n = PushRelabel::getGraphNode(active_u);
 	    }
-	    u_n.active_ = false;
-	    PushRelabel::setGraphNode(u_n, active_u);
+	    //u_n.active_ = false;
+	    graph_[active_u].first.active_ = false;
+	    //PushRelabel::setGraphNode(u_n, active_u);
 	}
 	else
             active_exists = false;
